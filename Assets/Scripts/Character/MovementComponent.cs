@@ -49,7 +49,7 @@ namespace Character
 
             float currentSpeed = PlayerController.IsRunning ? RunSpeed : WalkSpeed;
 
-            Vector3 movementDirection = new Vector3(InputVector.x, 0 , InputVector.y) * (currentSpeed * Time.deltaTime);
+            Vector3 movementDirection = new Vector3(MoveDirection.x, 0 , MoveDirection.z) * (currentSpeed * Time.deltaTime);
             
             PlayerTransform.position += movementDirection;
         }
