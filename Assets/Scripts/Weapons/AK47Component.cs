@@ -12,7 +12,10 @@ public class AK47Component : WeaponComponent
         print("Firing weaponz pew pew");
         if(WeaponStats.BulletsInClip > 0 && !Reloading && !WeaponHolder.PlayerController.IsRunning)
         {
-
+            if(!firingEffect)
+            {
+                firingEffect = Instantiate(FiringAnimation, ParticleSpawnLocation).GetComponent<ParticleSystem>();
+            }
         Ray screenRay = MainCamera.ScreenPointToRay(new Vector3(crossHair.CurrentAimPos.x, crossHair.CurrentAimPos.y, 0));
 
         if (!Physics.Raycast(screenRay, out RaycastHit hit, WeaponStats.FireDistance, WeaponStats.WeaponHitLayer))

@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerEvents : MonoBehaviour
+public class PlayerEvents
 {
-    public delegate void MouseCursorEnable(bool enabled);
+    public delegate void OnWeaponEquippedEvent(WeaponComponent weaponComponent);
 
-    public static event MouseCursorEnable MouseCursorEnabled;
+    public static event OnWeaponEquippedEvent OnWeaponEvent;
 
-    public static void Invoke_OnMousecursorEnable(bool enabled)
+    public static void Invoke_OnWeaponEquippedEvent(WeaponComponent weaponComponent)
     {
-        MouseCursorEnabled?.Invoke(enabled);
+        OnWeaponEvent?.Invoke(weaponComponent);
     }
 }

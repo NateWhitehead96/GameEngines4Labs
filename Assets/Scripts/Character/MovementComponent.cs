@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace Character
@@ -10,9 +11,12 @@ namespace Character
         [SerializeField] private float WalkSpeed;
         [SerializeField] private float RunSpeed;
         [SerializeField] private float JumpForce;
+        [SerializeField] private LayerMask JumpLayerMask;
+        private float Jumpthreshold = 0.1f;
         
         private Vector2 InputVector = Vector2.zero;
         private Vector3 MoveDirection = Vector3.zero;
+        private NavMeshAgent PlayerNavMeshAgent;
         
         //Comp
         private Animator PlayerAnimator;
@@ -35,6 +39,7 @@ namespace Character
             PlayerController = GetComponent<PlayerController>();
             PlayerAnimator = GetComponent<Animator>();
             PlayerRigidbody = GetComponent<Rigidbody>();
+            PlayerNavMeshAgent = GetComponent<NavMeshAgent>();
 
             PlayerTransform = transform;
         }
@@ -50,8 +55,9 @@ namespace Character
             float currentSpeed = PlayerController.IsRunning ? RunSpeed : WalkSpeed;
 
             Vector3 movementDirection = new Vector3(MoveDirection.x, 0 , MoveDirection.z) * (currentSpeed * Time.deltaTime);
-            
-            PlayerTransform.position += movementDirection;
+
+            //PlayerTransform.position += movementDirection;
+            PlayerNavMeshAgent.Move(movementDirection);
         }
 
         public void OnMovement(InputValue value)
@@ -70,18 +76,41 @@ namespace Character
 
         public void OnJump(InputValue button)
         {
+            if (PlayerController.IsJumping) return;
+
+            PlayerNavMeshAgent.isStopped = true;
+            PlayerNavMeshAgent.enabled = false;
+
             PlayerController.IsJumping = true;
             PlayerAnimator.SetBool(IsJumpingHash, true);
             
             PlayerRigidbody.AddForce((transform.up + MoveDirection) * JumpForce, ForceMode.Impulse);
+
+            InvokeRepeating(nameof(LandingCheck), 0f, 0.1f);
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void LandingCheck()
         {
-            if (!other.gameObject.CompareTag("Ground") && !PlayerController.IsJumping) return;
+            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 100f, JumpLayerMask))
+            {
+                if(hit.distance < Jumpthreshold)
+                {
+                    PlayerNavMeshAgent.enabled = true;
+                    PlayerNavMeshAgent.isStopped = false;
+                    PlayerController.IsJumping = false;
+                    PlayerAnimator.SetBool(IsJumpingHash, false);
 
-            PlayerController.IsJumping = false;
-            PlayerAnimator.SetBool(IsJumpingHash, false);
+                    CancelInvoke(nameof(LandingCheck));
+                }
+            }
         }
+
+        //private void OnCollisionEnter(Collision other)
+        //{
+        //    //if (!other.gameObject.CompareTag("Ground") && !PlayerController.IsJumping) return;
+
+        //    PlayerController.IsJumping = false;
+        //    PlayerAnimator.SetBool(IsJumpingHash, false);
+        //}
     }
 }

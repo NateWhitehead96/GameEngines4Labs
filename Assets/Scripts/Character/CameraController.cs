@@ -13,7 +13,7 @@ public class CameraController : InputMonoBehaviour
 
     private void OnLook(InputValue delta)
     {
-        Debug.Log("Looking");
+        //Debug.Log("Looking");
         Vector2 aimvalue = delta.Get<Vector2>();
         Quaternion addedRotation = Quaternion.AngleAxis(Mathf.Lerp(PreviousMouseDelta.x, aimvalue.x, 1f / HorizontalDamping) * RotationPower,
             transform.up);

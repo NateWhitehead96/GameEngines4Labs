@@ -51,6 +51,7 @@ public class WeaponHolder : MonoBehaviour
                 Playeranimator.SetInteger("WeaponType", (int)EquipedWeapon.WeaponInformation.WeaponType);
             }
         }
+        PlayerEvents.Invoke_OnWeaponEquippedEvent(EquipedWeapon);
     }
 
     private void OnAnimatorIK(int layerIndex)

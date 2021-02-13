@@ -33,9 +33,14 @@ public class WeaponComponent : MonoBehaviour
     public WeaponStats WeaponInformation => WeaponStats;
     [SerializeField] protected WeaponStats WeaponStats;
 
+    [SerializeField] public Transform ParticleSpawnLocation;
+
+    [SerializeField] protected GameObject FiringAnimation;
+
     protected WeaponHolder WeaponHolder;
     protected CrosshairScript crossHair;
     protected Camera MainCamera;
+    protected ParticleSystem firingEffect;
 
     public bool Firing { get; private set; }
     public bool Reloading { get; private set; }
@@ -64,6 +69,7 @@ public class WeaponComponent : MonoBehaviour
     public virtual void StopFiringWeapon()
     {
         Firing = false;
+        if (firingEffect) Destroy(firingEffect.gameObject);
         CancelInvoke(nameof(FireWeapon));
     }
     protected virtual void FireWeapon()
@@ -83,6 +89,8 @@ public class WeaponComponent : MonoBehaviour
     }
     protected virtual void ReloadWeapon()
     {
+        if (firingEffect) Destroy(firingEffect.gameObject);
+
         int bulletsToReload = WeaponStats.ClipSize - WeaponStats.BulletAvailable;
         if(bulletsToReload < 0)
         {
