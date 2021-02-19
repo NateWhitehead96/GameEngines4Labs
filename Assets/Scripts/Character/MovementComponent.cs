@@ -12,6 +12,7 @@ namespace Character
         [SerializeField] private float RunSpeed;
         [SerializeField] private float JumpForce;
         [SerializeField] private LayerMask JumpLayerMask;
+        [SerializeField] private float movedirectionBuffer = 10f;
         private float Jumpthreshold = 0.1f;
         
         private Vector2 InputVector = Vector2.zero;
@@ -26,6 +27,8 @@ namespace Character
         
         //Reference 
         private Transform PlayerTransform;
+
+        private Vector3 NextPositionCheck;
 
         
         //Animator Hashes
@@ -48,7 +51,7 @@ namespace Character
         {
             if (PlayerController.IsJumping) return;
             
-            if (!(InputVector.magnitude > 0))  MoveDirection = Vector3.zero;
+            //if (!(InputVector.magnitude > 0))  MoveDirection = Vector3.zero;
             
             MoveDirection = PlayerTransform.forward * InputVector.y + PlayerTransform.right * InputVector.x;
 
@@ -56,8 +59,22 @@ namespace Character
 
             Vector3 movementDirection = new Vector3(MoveDirection.x, 0 , MoveDirection.z) * (currentSpeed * Time.deltaTime);
 
+            NextPositionCheck = transform.position + MoveDirection * movedirectionBuffer;
             //PlayerTransform.position += movementDirection;
-            PlayerNavMeshAgent.Move(movementDirection);
+            //PlayerNavMeshAgent.Move(movementDirection);
+
+            if(NavMesh.SamplePosition(NextPositionCheck, out NavMeshHit hit, 1f, NavMesh.AllAreas))
+            {
+                transform.position += movementDirection;
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (!collision.collider.CompareTag("Ground") || !PlayerController.IsJumping) return;
+
+            PlayerController.IsJumping = false;
+            PlayerAnimator.SetBool(IsJumpingHash, false);
         }
 
         public void OnMovement(InputValue value)
@@ -86,24 +103,24 @@ namespace Character
             
             PlayerRigidbody.AddForce((transform.up + MoveDirection) * JumpForce, ForceMode.Impulse);
 
-            InvokeRepeating(nameof(LandingCheck), 0f, 0.1f);
+            //InvokeRepeating(nameof(LandingCheck), 0f, 0.1f);
         }
 
-        private void LandingCheck()
-        {
-            if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 100f, JumpLayerMask))
-            {
-                if(hit.distance < Jumpthreshold)
-                {
-                    PlayerNavMeshAgent.enabled = true;
-                    PlayerNavMeshAgent.isStopped = false;
-                    PlayerController.IsJumping = false;
-                    PlayerAnimator.SetBool(IsJumpingHash, false);
+        //private void LandingCheck()
+        //{
+        //    if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 100f, JumpLayerMask))
+        //    {
+        //        if(hit.distance < Jumpthreshold)
+        //        {
+        //            PlayerNavMeshAgent.enabled = true;
+        //            PlayerNavMeshAgent.isStopped = false;
+        //            PlayerController.IsJumping = false;
+        //            PlayerAnimator.SetBool(IsJumpingHash, false);
 
-                    CancelInvoke(nameof(LandingCheck));
-                }
-            }
-        }
+        //            CancelInvoke(nameof(LandingCheck));
+        //        }
+        //    }
+        //}
 
         //private void OnCollisionEnter(Collision other)
         //{
