@@ -17,6 +17,8 @@ public class ZombieComponent : MonoBehaviour
 
     public bool Debug;
 
+    public float ZombieDamage => damage;
+    [SerializeField] float damage;
     private void Awake()
     {
         ZombieNavMesh = GetComponent<NavMeshAgent>();

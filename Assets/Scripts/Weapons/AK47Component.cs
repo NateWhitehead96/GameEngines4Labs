@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,8 @@ public class AK47Component : WeaponComponent
             return;
         }
         hitLocation = hit.point;
+
+            TakeDamage(hit);
         Vector3 hitDirection = hit.point - MainCamera.transform.position;
         Debug.DrawRay(MainCamera.transform.position, hitDirection.normalized * WeaponStats.FireDistance, Color.red);
         }
@@ -34,6 +37,13 @@ public class AK47Component : WeaponComponent
         
 
     }
+
+    private void TakeDamage(RaycastHit hit)
+    {
+        IDamagable damagable = hit.collider.GetComponent<IDamagable>();
+        damagable?.TakeDamage(WeaponInformation.Damage);
+    }
+
     private void OnDrawGizmos()
     {
         if(hitLocation != Vector3.zero)

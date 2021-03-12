@@ -12,4 +12,13 @@ public class PlayerEvents
     {
         OnWeaponEvent?.Invoke(weaponComponent);
     }
+
+    public delegate void OnHealthInitializeEvent(HealthComponant healthComponant);
+
+    public static event OnHealthInitializeEvent OnHealthInitialize;
+
+    public static void Invoke_OnHealthInitializeEvent(HealthComponant healthComponent)
+    {
+        OnHealthInitialize?.Invoke(healthComponent);
+    }
 }
