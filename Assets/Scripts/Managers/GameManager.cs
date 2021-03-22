@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public bool CursorActive = true;
+
+    public string GameSaveName { get; private set; } = "";
     private void Awake()
     {
         if(Instance != null && Instance != this)
@@ -17,6 +19,12 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this);
         }
+    }
+
+    public void SetActiveSave(string saveName)
+    {
+        if (string.IsNullOrEmpty(saveName)) return;
+        GameSaveName = saveName;
     }
 
     private void EnableCursor(bool enable)
