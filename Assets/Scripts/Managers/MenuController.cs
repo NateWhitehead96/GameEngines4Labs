@@ -12,6 +12,7 @@ public class MenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AppEvents.Invoke_OnMousecursorEnable(true);
         DisableAllMenus();
         EnableMenu("MainMenu");
     }

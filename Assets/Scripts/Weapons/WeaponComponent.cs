@@ -48,10 +48,14 @@ public class WeaponComponent : MonoBehaviour
     {
         MainCamera = Camera.main;
     }
-    public void Initialize(WeaponHolder weaponHolder, CrosshairScript crosshair)
+    public void Initialize(WeaponHolder weaponHolder, WeaponScriptable weaponScriptable)
     {
         WeaponHolder = weaponHolder;
-        crossHair = crosshair;
+        crossHair = weaponHolder.PlayerCrosshair;
+        if(weaponScriptable)
+        {
+            WeaponStats = weaponScriptable.WeaponStats;
+        }
     }
 
     public virtual void StartFiringWeapon()

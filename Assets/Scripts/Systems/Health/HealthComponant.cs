@@ -1,3 +1,4 @@
+using Character;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class HealthComponant : MonoBehaviour, IDamagable
     [SerializeField] private float CurrentHealth;
     [SerializeField] private float TotalHealth;
 
+    //[SerializeField] private ConsumableScriptable PotionItem;
     public virtual void Destroy()
     {
         Destroy(gameObject);
@@ -27,7 +29,16 @@ public class HealthComponant : MonoBehaviour, IDamagable
     protected virtual void Start()
     {
         CurrentHealth = TotalHealth;
+        CurrentHealth = 50;
+        //PotionItem.UseItem(GetComponent<PlayerController>());
     }
 
+    public void HealPlayer(int effect)
+    {
+        if(CurrentHealth < MaxHealth)
+        {
+            CurrentHealth = Mathf.Clamp(CurrentHealth + effect, 0, MaxHealth);
+        }
+    }
     
 }

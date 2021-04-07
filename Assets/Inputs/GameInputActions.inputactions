@@ -52,6 +52,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "Press"
+                },
+                {
+                    "name": "PauseGame",
+                    "type": "Button",
+                    "id": "24e6060c-4694-4ad6-8578-f964fbe67783",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press"
                 }
             ],
             "bindings": [
@@ -162,6 +170,44 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reloading",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db330baf-5c26-45c8-b279-696f7555f931",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PauseGame",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PauseActionMap",
+            "id": "19bf6b55-5da5-4100-87cb-4c667257aefe",
+            "actions": [
+                {
+                    "name": "UnPauseGame",
+                    "type": "Button",
+                    "id": "5fa363bd-d15e-45b2-87ba-9755730c8025",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "19e27667-38ad-4f60-8225-bdd0037c1820",
+                    "path": "<Keyboard>/p",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UnPauseGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
